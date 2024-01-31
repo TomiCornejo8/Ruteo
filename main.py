@@ -1,14 +1,15 @@
 import numpy as np
-from MH.imports import iterarFOX
+from MH.imports import iterarFOX,iterarEOO
 
 np.set_printoptions(precision=4)
 
 def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
+mh = 'EOO'
 maxIter = 100
 dim = 3
-nPopulation = 4
+nPopulation = 3
 
 ub = 100
 lb = -100
@@ -33,31 +34,36 @@ def repairSolution(X):
 X = np.random.uniform(lb, ub+1, size=(nPopulation, dim))
 
 for it in range(maxIter+1):
-    condition = it<3 or it==100
+     condition = it<3 or it==100
 
-    if it==0: 
-        with open('result.txt','w', encoding='utf-8') as f: f.write(f"Solución inicial:\n")
-    else:
-         if condition: writeFile(f"Soluciones obtenidas en la iteración {it}:\n")
-         #  Metaheuristica
-         X = iterarFOX(maxIter,it,dim,X.tolist(),best.tolist())
+     if it==0: 
+          with open('result.txt','w', encoding='utf-8') as f: f.write(f"SOLUCIÓN INICIAL:\n")
+     else:
+          if condition: writeFile(f"ITERACIÓN {it}\n")
+          if condition: writeFile(f"ECUACIONES GENERALES:")
 
-         for i in range(nPopulation):
-              contInf = checkSolution(X[i])
-              if condition: writeFile(f"ind {i+1}: {X[i]}, infactibles: {contInf}")
-              repairSolution(X[i])
+          #  Metaheuristica
+          if mh == 'FOX':
+               X = iterarFOX(maxIter,it,dim,X.tolist(),best.tolist())
+          elif mh == 'EOO':
+               X = iterarEOO(maxIter,it,X.tolist(),best.tolist())
 
-    if condition: writeFile(f"Reparación de soluciones:")
-    fitness = []
-    for i in range(nPopulation):
-        fitness.append(fitnessFunction(X[i]))
-        if condition: writeFile(f"ind {i+1}: {X[i]} / fitness: {fitness[i]:.4f}")
-    
-    bestIndex = np.argmin(np.array(fitness))
-    best = X[bestIndex]
-    bestFitness = fitness[bestIndex]
+          if condition: writeFile(f"SOLUCIONES OBTENIDAS EN LA ITERACIÓN {it}:")
+          for i in range(nPopulation):
+               contInf = checkSolution(X[i])
+               if condition: writeFile(f"ind {i+1}: {X[i]}, infactibles: {contInf}")
+               repairSolution(X[i])
+          if condition: writeFile(f"\nREPARACIÓN DE SOLUCIONES:")
+     
+     fitness = []
+     for i in range(nPopulation):
+          fitness.append(fitnessFunction(X[i]))
+          if condition: writeFile(f"ind {i+1}: {X[i]} / fitness: {fitness[i]:.4f}")
 
-    if condition: writeFile(f"Mejor solución: ind {bestIndex+1}: {best} / fitness: {bestFitness:.4f}")
+     bestIndex = np.argmin(np.array(fitness))
+     best = X[bestIndex]
+     bestFitness = fitness[bestIndex]
 
-    if condition: writeFile(f"----------------------------------------------------------------------------------------\n")
+     if condition: writeFile(f"\nMejor solución: ind {bestIndex+1}: {best} / fitness: {bestFitness:.4f}")
+     if condition: writeFile(f"----------------------------------------------------------------------------------------")
     
