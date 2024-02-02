@@ -1,15 +1,18 @@
 import numpy as np
-from MH.imports import iterarFOX,iterarEOO
+import time
+from MH.imports import iterarFOX,iterarEOO,iterarRSA
 
 np.set_printoptions(precision=4)
 
+# condition = it<3 or it==100
+# if condition: writeFile(f"")
 def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
-mh = 'EOO'
-maxIter = 100
+mh = 'RSA'
+N = 2
 dim = 3
-nPopulation = 3
+maxIter = 100
 
 ub = 100
 lb = -100
@@ -24,14 +27,13 @@ def checkSolution(X):
      return cont
 
 def repairSolution(X):
-    for i in range(len(X)):
-        if X[i]>ub:
-             X[i] = ub
-        elif X[i]<lb:
-             X[i] = lb
+    for j in range(len(X)): np.clip(X[j],lb,ub)
     return X
 
-X = np.random.uniform(lb, ub+1, size=(nPopulation, dim))
+start = time.time()
+print(f"Ejecutando {mh}")
+
+X = np.random.uniform(lb, ub+1, size=(N, dim))
 
 for it in range(maxIter+1):
      condition = it<3 or it==100
@@ -47,16 +49,18 @@ for it in range(maxIter+1):
                X = iterarFOX(maxIter,it,dim,X.tolist(),best.tolist())
           elif mh == 'EOO':
                X = iterarEOO(maxIter,it,X.tolist(),best.tolist())
+          elif mh == 'RSA':
+               X = iterarRSA(maxIter,it,dim,X.tolist(),best.tolist(),lb,ub)
 
           if condition: writeFile(f"SOLUCIONES OBTENIDAS EN LA ITERACIÓN {it}:")
-          for i in range(nPopulation):
+          for i in range(N):
                contInf = checkSolution(X[i])
                if condition: writeFile(f"ind {i+1}: {X[i]}, infactibles: {contInf}")
                repairSolution(X[i])
           if condition: writeFile(f"\nREPARACIÓN DE SOLUCIONES:")
      
      fitness = []
-     for i in range(nPopulation):
+     for i in range(N):
           fitness.append(fitnessFunction(X[i]))
           if condition: writeFile(f"ind {i+1}: {X[i]} / fitness: {fitness[i]:.4f}")
 
@@ -66,4 +70,5 @@ for it in range(maxIter+1):
 
      if condition: writeFile(f"\nMejor solución: ind {bestIndex+1}: {best} / fitness: {bestFitness:.4f}")
      if condition: writeFile(f"----------------------------------------------------------------------------------------")
-    
+
+print(f"{mh} termino de ejecutarse en: {(time.time()-start):.4f} (s)")
