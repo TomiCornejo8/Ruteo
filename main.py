@@ -1,17 +1,17 @@
 import numpy as np
 import time
-from MH.imports import iterarFOX,iterarEOO,iterarRSA
+from MH.imports import iterarFOX,iterarEOO,iterarRSA,iterarGOA
 
 np.set_printoptions(precision=4)
 
-# condition = it<3 or it==100
+# condition = it<3 or it==maxIter
 # if condition: writeFile(f"")
 def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
-mh = 'RSA'
+mh = 'GOA'
 N = 2
-dim = 3
+dim = 2
 maxIter = 100
 
 ub = 100
@@ -26,9 +26,13 @@ def checkSolution(X):
           if x>ub or x<lb: cont += 1
      return cont
 
-def repairSolution(X):
-    for j in range(len(X)): np.clip(X[j],lb,ub)
-    return X
+def repairSolution(x):
+    for j in range(len(x)): np.clip(x[j],lb,ub)
+    return x
+
+def fo(x):
+     x = repairSolution(x)
+     return x,fitnessFunction(np.array(x))
 
 start = time.time()
 print(f"Ejecutando {mh}")
@@ -36,7 +40,7 @@ print(f"Ejecutando {mh}")
 X = np.random.uniform(lb, ub+1, size=(N, dim))
 
 for it in range(maxIter+1):
-     condition = it<3 or it==100
+     condition = it<3 or it==maxIter
 
      if it==0: 
           with open('result.txt','w', encoding='utf-8') as f: f.write(f"SOLUCIÓN INICIAL:\n")
@@ -51,6 +55,8 @@ for it in range(maxIter+1):
                X = iterarEOO(maxIter,it,X.tolist(),best.tolist())
           elif mh == 'RSA':
                X = iterarRSA(maxIter,it,dim,X.tolist(),best.tolist(),lb,ub)
+          elif mh == 'GOA':
+               X = iterarGOA(maxIter,it,dim,X.tolist(),best.tolist(),fitness,fo,'MIN')
 
           if condition: writeFile(f"SOLUCIONES OBTENIDAS EN LA ITERACIÓN {it}:")
           for i in range(N):

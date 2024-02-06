@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-# condition = it<3 or it==100
+# condition = it<3 or it==maxIter
 # if condition: writeFile(f"")
 def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
@@ -16,7 +16,7 @@ def iterarRSA(maxIter, it, dim, population, bestSolution,LB,UB):
     LB: Margen inferior
     UB: Margen superior
     '''
-    condition = it<3 or it==100
+    condition = it<3 or it==maxIter
     #PARAM
     alfa = 0.1
     beta = 0.1
@@ -56,7 +56,7 @@ def iterarRSA(maxIter, it, dim, population, bestSolution,LB,UB):
                 writeFile("Eta = Best[j] * P")
                 writeFile("")
                 writeFile(f"r2 = random(0,{N}-1) = {r2}")
-                writeFile(f"R = = (Best[{j+1}] - X[{r2}][{j+1}])/(Best[{j+1}]+eps) = ({bestSolution[j]:.4f} - {population[r2][j]:.4f})/({bestSolution[j]:.4f}+{eps:.4f}) = {R:.4f}")
+                writeFile(f"R = (Best[{j+1}] - X[{r2}][{j+1}])/(Best[{j+1}]+eps) = ({bestSolution[j]:.4f} - {population[r2][j]:.4f})/({bestSolution[j]:.4f}+{eps:.4f}) = {R:.4f}")
                 writeFile(f"P = alfa + (X[{i+1}][{j+1}]-mean(X[{i+1}])) / (UB-LB+eps) = {alfa} + ({population[i][j]:.4f} - {np.mean(population[i]):.4f}) / ({UB}-{LB}+{eps:.4f}) = {P:.4f}")
                 writeFile(f"Eta = Best[{j+1}] * P = {bestSolution[j]:.4f} * {P:.4f} = {Eta:.4f}")
                 writeFile(f"rand = random() = {rand:.4f}")

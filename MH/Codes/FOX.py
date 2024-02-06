@@ -4,7 +4,7 @@ def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
 def iterarFOX(maxIter,it,dim, population, bestSolution):
-    condition = it<3 or it==100
+    condition = it<3 or it==maxIter
     population = np.array(population)
     bestSolution = np.array(bestSolution)
     
