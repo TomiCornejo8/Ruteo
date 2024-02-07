@@ -52,10 +52,7 @@ def getRandomPopulation(population):
 def getAveragePopulation(population, dim):
     Xm = []
     for j in range(dim):
-        sum = 0
-        for i in range(len(population)):
-            sum += population[i][j]
-        Xm.append(sum / len(population))
+        Xm.append(np.average(population[:,j]))
     return Xm
 
 

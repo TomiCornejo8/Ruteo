@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from MH.imports import iterarFOX,iterarEOO,iterarRSA,iterarGOA
+from MH.imports import iterarFOX,iterarEOO,iterarRSA,iterarGOA,iterarPSO
 
 np.set_printoptions(precision=4)
 
@@ -9,11 +9,11 @@ np.set_printoptions(precision=4)
 def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
-mh = 'GOA'
-N = 2
+# CONFIGURACIÓN
+mh = 'PSO'
+N = 4
 dim = 2
-maxIter = 100
-
+maxIter = 5000
 ub = 100
 lb = -100
 
@@ -39,6 +39,8 @@ print(f"Ejecutando {mh}")
 
 X = np.random.uniform(lb, ub+1, size=(N, dim))
 
+bestX = np.copy(X) 
+
 for it in range(maxIter+1):
      condition = it<3 or it==maxIter
 
@@ -57,6 +59,8 @@ for it in range(maxIter+1):
                X = iterarRSA(maxIter,it,dim,X.tolist(),best.tolist(),lb,ub)
           elif mh == 'GOA':
                X = iterarGOA(maxIter,it,dim,X.tolist(),best.tolist(),fitness,fo,'MIN')
+          elif mh == 'PSO':
+               X = iterarPSO(maxIter, it, dim, X.tolist(),best.tolist(),bestX)
 
           if condition: writeFile(f"SOLUCIONES OBTENIDAS EN LA ITERACIÓN {it}:")
           for i in range(N):
@@ -69,6 +73,8 @@ for it in range(maxIter+1):
      for i in range(N):
           fitness.append(fitnessFunction(X[i]))
           if condition: writeFile(f"ind {i+1}: {X[i]} / fitness: {fitness[i]:.4f}")
+          if mh == 'PSO':
+               if fitness[i] < fitnessFunction(bestX): bestX[i] = np.copy(X[i])          
 
      bestIndex = np.argmin(np.array(fitness))
      best = X[bestIndex]
