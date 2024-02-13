@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from MH.imports import iterarFOX,iterarEOO,iterarRSA,iterarGOA,iterarPSO,iterarHBA
+from MH.imports import iterarFOX,iterarEOO,iterarRSA,iterarGOA,iterarPSO,iterarHBA,iterarTDO
 
 np.set_printoptions(precision=4)
 
@@ -10,7 +10,7 @@ def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
 # CONFIGURACIÓN
-mh = 'HBA'
+mh = 'TDO'
 N = 2
 dim = 2
 maxIter = 100
@@ -63,6 +63,8 @@ for it in range(maxIter+1):
                X = iterarPSO(maxIter, it, dim, X.tolist(),best.tolist(),bestX)
           elif mh == 'HBA':
                X = iterarHBA(maxIter, it, dim, X.tolist(),best.tolist(), fitness, fo,'MIN')
+          elif mh == 'TDO':
+               X = iterarTDO(maxIter,it,dim,X.tolist(),fitness,fo,'MIN')
 
           if condition: writeFile(f"SOLUCIONES OBTENIDAS EN LA ITERACIÓN {it}:")
           for i in range(N):

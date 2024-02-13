@@ -74,7 +74,7 @@ def iterarHBA(maxIter, it, dim, population, bestSolution, fitness, function,type
           if condition: writeFile(f"S = (X[{i+1}][{j+1}] - X[{i+2}][{j+1}])^2 = ({population[i][j]:.4f} - {population[i+1][j]:.4f})^2 = {S:.4f}")
         else:
           S = np.power((population[i][j] - population[0][j]) ,2)
-          if condition: writeFile(f"S = (X[{i+1}][{j+1}] - X[0][{j+1}])^2 = ({population[i][j]:.4f} - {population[0][j]:.4f})^2 = {S:.4f}")
+          if condition: writeFile(f"S = (X[{i+1}][{j+1}] - X[1][{j+1}])^2 = ({population[i][j]:.4f} - {population[0][j]:.4f})^2 = {S:.4f}")
         
         I = r2 * S / (4 * pi * np.power(di + epsilon, 2))
 
