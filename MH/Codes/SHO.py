@@ -70,7 +70,7 @@ def iterarSHO(maxIter, it, dim, population,bestSolution, function, typeProblem):
                     writeFile(f"x = ρ * cos(θ) = {p:.4f} * cos({theta:.4f}) = {x:.4f}")
                     writeFile(f"y = ρ * sin(θ) = {p:.4f} * sin({theta:.4f}) = {y:.4f}")
                     writeFile(f"z = ρ * θ = {p:.4f} * {theta:.4f} = {z:.4f}")
-                    writeFile(f"X[{i+1},{j+1}] = X[{i+1},{j+1}] + levy * (Best[{j+1}] - X[{i+1},{j+1}]) * x * y * z + Best[{j+1}] = {aux:.4f} + {levy:.4f} * ({bestSolution[j]:.4f} - {aux:.4f}) * {x:.4f} * {y:.4f} * {z:.4f} + {bestSolution[j]:.4f} = {population[i,j]}")
+                    writeFile(f"X[{i+1},{j+1}] = X[{i+1},{j+1}] + levy * (Best[{j+1}] - X[{i+1},{j+1}]) * x * y * z + Best[{j+1}] = {aux:.4f} + {levy:.4f} * ({bestSolution[j]:.4f} - {aux:.4f}) * {x:.4f} * {y:.4f} * {z:.4f} + {bestSolution[j]:.4f} = {population[i,j]:.4f}")
             else:
                 rand = random.uniform(0,1)
                 aux = population[i,j]

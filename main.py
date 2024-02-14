@@ -10,10 +10,10 @@ def writeFile(string):
      with open('result.txt','a', encoding='utf-8') as f: f.write(f"{string}\n")
 
 # CONFIGURACIÓN
-mh = 'SHO'
-N = 2
-dim = 2
-maxIter = 100
+mh = 'GOA'
+N = 4
+dim = 3
+maxIter = 500
 ub = 100
 lb = -100
 
