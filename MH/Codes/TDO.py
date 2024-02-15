@@ -39,7 +39,7 @@ def iterarTDO(maxIter, it, dim, population, fitness, function, typeProblem):
                 rand = random.uniform(0.0, 1.0)
                 xNew[j] = population[i][j] + rand * (CPi[j] - I * population[i][j])
                 if condition:
-                    writeFile(f"f(CPi) < f(X[{i+1}]) -> {function(CPi)[1]:.4f} < {fitness[i]:.4f}")
+                    writeFile(f"f(CPi) < f(X[{i+1}]) → {function(CPi)[1]:.4f} < {fitness[i]:.4f}")
                     writeFile(f"I = randint(1,2) = {I}")
                     writeFile(f"xNew[{j+1}] = X[{i+1},{j+1}] + random() * (CPi[{j+1}] - I * X[{i+1},{j+1}]) = {population[i][j]:.4f} + {rand:.4f} * ({CPi[j]:.4f} - {I} * {population[i][j]:.4f}) = {xNew[j]:.4f}")
                     writeFile("")
@@ -48,22 +48,32 @@ def iterarTDO(maxIter, it, dim, population, fitness, function, typeProblem):
                 rand = random.uniform(0.0, 1.0)
                 xNew[j] = population[i][j] + rand * (population[i][j] - CPi[j])
                 if condition:
+                    writeFile(f"f(CPi) ≥ f(X[{i+1}]) → {function(CPi)[1]:.4f} ≥ {fitness[i]:.4f}")
                     writeFile(f"xNew[{j+1}] = X[{i+1},{j+1}] + random() * (X[{i+1},{j+1}] - CPi[{j+1}]) = {population[i][j]:.4f} + {rand:.4f} * ({population[i][j]:.4f} - {CPi[j]:.4f}) = {xNew[j]:.4f}")
                     writeFile("")
         
         xNew,fitnessNew = function(xNew)
         if typeProblem == 'MIN': condition2 = fitnessNew < fitness[i]
         elif typeProblem == 'MAX': condition2 = fitnessNew > fitness[i]
-        if condition2: population[i] = np.copy(xNew)
         if condition:
             writeFile(f"ind {i+1} iter {it}")
-            writeFile(f"f(xNew) < f(X[{i+1}]) -> {fitnessNew:.4f} < {fitness[i]:.4f} -> X[{i+1}] = xNew = {xNew}")
+            writeFile(f"X[{i+1}] = {population[i]} → f(X[{i+1}]) = {fitness[i]:.4f}")
+            writeFile(f"xNew = {xNew} → f(xNew) = {fitnessNew:.4f}")
+        if condition2: 
+            if condition:
+                writeFile(f"f(xNew) < f(X[{i+1}]) → {fitnessNew:.4f} < {fitness[i]:.4f} → X[{i+1}] = xNew")
+            population[i] = np.copy(xNew)
+        else:
+            if condition:
+                writeFile(f"f(xNew) ≥ f(X[{i+1}]) → {fitnessNew:.4f} ≥ {fitness[i]:.4f} → X[{i+1}] se mantiene")
 
         if r >= 0.5:
             # EXPLOTACIÓN
             R = 0.01 * (1 - (it / maxIter))
 
             if condition:
+                writeFile("")
+                writeFile(f"ind {i+1} iter {it}")
                 writeFile(f"r = random() = {r}")
                 writeFile(f"r >= 0.5 -> {r:.4f} >= 0.5")
                 writeFile(f"R = 0.01 * (1 - (it / maxIter)) = 0.01 * (1 - ({it} / {maxIter})) = {R:.4f}")
@@ -82,10 +92,18 @@ def iterarTDO(maxIter, it, dim, population, fitness, function, typeProblem):
             xNew,fitnessNew = function(xNew)
             if typeProblem == 'MIN': condition3 = fitnessNew < fitness[i]
             elif typeProblem == 'MAX': condition3 = fitnessNew > fitness[i]
-            if condition3: population[i] = np.copy(xNew)
             if condition:
-                writeFile(f"f(xNew) < f(X[{i+1}]) -> {fitnessNew:.4f} < {fitness[i]:.4f} -> X[{i+1}] = xNew = {xNew}")
-                writeFile("")
+                    writeFile(f"ind {i+1} iter {it}")
+                    writeFile(f"X[{i+1}] = {population[i]} → f(X[{i+1}]) = {fitness[i]:.4f}")
+                    writeFile(f"xNew = {xNew} → f(xNew) = {fitnessNew:.4f}")
+            if condition3:
+                if condition:
+                    writeFile(f"f(xNew) < f(X[{i+1}]) → {fitnessNew:.4f} < {fitness[i]:.4f} → X[{i+1}] = xNew")
+                population[i] = np.copy(xNew)
+            else:
+                if condition:
+                    writeFile(f"f(xNew) ≥ f(X[{i+1}]) → {fitnessNew:.4f} ≥ {fitness[i]:.4f} → X[{i+1}] se mantiene")
+            if condition: writeFile("")
         else:
             if condition: writeFile("")
 
